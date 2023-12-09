@@ -7,8 +7,6 @@ from aiogram.types import Message
 router = Router()
 
 
-data = {}  # потом заменю на полноценную бд
-
 
 @router.message(CommandStart())
 async def get_start(message: Message):
