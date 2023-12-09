@@ -2,7 +2,7 @@ import asyncio
 import logging
 
 from aiogram import Bot, Dispatcher
-from handlers.notion_handler import router as video_router
+from handlers.notion_handler import router
 from config import settings
 
 
@@ -14,7 +14,7 @@ async def main():
 
     bot = Bot(token=settings.BOT_TOKEN)
     dp = Dispatcher()
-    dp.include_router(video_router)
+    dp.include_router(router)
 
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)

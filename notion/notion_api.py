@@ -1,5 +1,4 @@
 from notion_client import Client
-
 from pprint import pprint
 import json
 
@@ -58,7 +57,7 @@ def read_db(client: Client):
         write_dict_to_file_as_json(simple_rows, 'simple_rows.json')
 
 
-def write_row(client: Client, database_id, task_name, tags, start_date, end_date):
+def write_row(client: Client, database_id: str, task_name: str, tags: str, start_date: str, end_date: str):
     client.pages.create(
         **{
             'parent': {
@@ -66,7 +65,7 @@ def write_row(client: Client, database_id, task_name, tags, start_date, end_date
             },
             'properties': {
                 'Task_Name': {'title': [{'text': {'content': task_name}}]},
-                "Tags": {"multi_select": [{"name": "code"}]},
+                "Tags": {"multi_select": [{"name": tags}]},
                 'Date': {'date': {'start': start_date, 'end': end_date}}
             }
         }
@@ -81,4 +80,4 @@ if __name__ == "__main__":
 
     read_db(client)
     pprint(read_text(client, page_id))
-    write_row(client, DB_ID, 'Nameee', 'code', '2023-12-09', '2023-12-11')
+    write_row(client, DB_ID, 'Nameee', "smth", '2023-12-09', '2023-12-11')
