@@ -4,10 +4,8 @@ from db.database import Base
 
 
 class User(Base):
-    __tablename__ = 'user'
+    __tablename__ = "user"
 
-    user_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    db_link: Mapped[str] = mapped_column(nullable=False)
+    user_id: Mapped[int] = mapped_column(primary_key=True)
+    db_link: Mapped[str]
 
-    def __repr__(self):
-        return "user_id={}, db_link={}".format(self.user_id, self.db_link)
