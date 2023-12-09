@@ -1,8 +1,16 @@
 from notion_client import Client
 
 from pprint import pprint
+import json
 
 DB_ID = "ff715c8bdd53406e826a6f0f8d9af46a"
+
+
+def write_dict_to_file_as_json(content, file_name):
+    content_as_json_str = json.dumps(content)
+
+    with open(file_name, 'w') as f:
+        f.write(content_as_json_str)
 
 
 def safe_get(data, dot_chained_keys):
@@ -24,8 +32,11 @@ def safe_get(data, dot_chained_keys):
 
 def main():
     client = Client(auth="secret_eOEd2ENynh5mQ1ztBDR0G6NIcUId9qxSyJPM0nytukH")
-    # https://www.notion.so/ff715c8bdd53406e826a6f0f8d9af46a?v=5009098538b54e679486c032db69025a&pvs=4
+    db_info = client.databases.retrieve(database_id=DB_ID)
+    write_dict_to_file_as_json(db_info, 'db_info.json')
+
     db_rows = client.databases.query(database_id=DB_ID)
+    write_dict_to_file_as_json(db_rows, 'db_rows.json')
     pprint(db_rows)
 
     simple_rows = []
@@ -45,6 +56,7 @@ def main():
         for i in simple_rows:
             pprint(i)
 
+        write_dict_to_file_as_json(simple_rows, 'simple_rows.json')
 
 if __name__ == "__main__":
     main()
