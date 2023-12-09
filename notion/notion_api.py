@@ -3,16 +3,21 @@ from notion_client import Client
 from pprint import pprint
 import json
 
-DB_ID = "ff715c8bdd53406e826a6f0f8d9af46a"
 
-
-# https://www.notion.so/6aea1e4874e34ea1bf16bf0824d95a06?v=146ee4d81298452fbddd8f6ac920ba8c&pvs=4
 # https://www.notion.so/ff715c8bdd53406e826a6f0f8d9af46a?v=5009098538b54e679486c032db69025a&pvs=4
+
+# https://www.notion.so/Getting-Started-494d81541eeb4534abaf10425ab38630?pvs=4
+# https://www.notion.so/ca3b142971f4434cbedc5a78c7e129d7?v=db57be347e4c470d94e41a16368e4957&pvs=4
 def write_dict_to_file_as_json(content, file_name):
     content_as_json_str = json.dumps(content)
 
     with open(file_name, 'w') as f:
         f.write(content_as_json_str)
+
+
+def read_text(client, page_id):
+    response = client.blocks.children.list(block_id=page_id)
+    return response
 
 
 def safe_get(data, dot_chained_keys):
@@ -33,9 +38,6 @@ def safe_get(data, dot_chained_keys):
 
 
 def read_db(client: Client):
-    db_info = client.databases.retrieve(database_id=DB_ID)
-    write_dict_to_file_as_json(db_info, 'db_info.json')
-
     db_rows = client.databases.query(database_id=DB_ID)
     write_dict_to_file_as_json(db_rows, 'db_rows.json')
 
@@ -64,7 +66,7 @@ def write_row(client: Client, database_id, task_name, tags, start_date, end_date
             },
             'properties': {
                 'Task_Name': {'title': [{'text': {'content': task_name}}]},
-                'Tags': {'multi_select': {'name': tags}},
+                "Tags": {"multi_select": [{"name": "code"}]},
                 'Date': {'date': {'start': start_date, 'end': end_date}}
             }
         }
@@ -73,5 +75,10 @@ def write_row(client: Client, database_id, task_name, tags, start_date, end_date
 
 if __name__ == "__main__":
     client = Client(auth="secret_eOEd2ENynh5mQ1ztBDR0G6NIcUId9qxSyJPM0nytukH")
+
+    DB_ID = "ca3b142971f4434cbedc5a78c7e129d7"
+    page_id = "494d81541eeb4534abaf10425ab38630"
+
     read_db(client)
+    pprint(read_text(client, page_id))
     write_row(client, DB_ID, 'Nameee', 'code', '2023-12-09', '2023-12-11')

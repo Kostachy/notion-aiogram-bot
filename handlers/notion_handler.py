@@ -18,7 +18,7 @@ async def get_start(message: Message):
 @router.message(F.text)
 async def get_tasks(message: Message):
     global data
-    data['tasks'] = ['Task_Name', ]
+    data['tasks'] = ['Task_Name']
     logging.info(data)
     await message.answer("👍")
 
