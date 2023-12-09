@@ -12,7 +12,7 @@
     "object": "user",
     "id": "2739bed6-e990-4324-8daa-ffae00f9f5bd"
   },
-  "last_edited_time": "2023-12-09T17:41:00.000Z",
+  "last_edited_time": "2023-12-09T18:02:00.000Z",
   "title": [
     {
       "type": "text",
@@ -50,6 +50,11 @@
             "id": "f389ca55-79a2-4ce3-a464-7516a138fe15",
             "name": "Cars",
             "color": "gray"
+          },
+          {
+            "id": "b489b741-d57a-47a5-b598-1be240837f37",
+            "name": "smth",
+            "color": "yellow"
           }
         ]
       }
@@ -74,5 +79,5 @@
   "url": "https://www.notion.so/ff715c8bdd53406e826a6f0f8d9af46a",
   "public_url": null,
   "archived": false,
-  "request_id": "63877c54-6bad-4870-b30b-0c1eb21690bb"
+  "request_id": "47181f43-b18b-4e68-9b2c-e0ae2ddbd4aa"
 }
