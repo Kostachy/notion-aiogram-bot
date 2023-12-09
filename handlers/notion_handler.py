@@ -21,6 +21,7 @@ async def get_start(message: Message):
 
 @router.message(F.text)
 async def get_tasks(message: Message):
+    """Добавление ссылку на notion в бд"""
     db_id = get_notion_db_id(message.text)
-    await UserCrud.update_db_link(db_id)
+    await UserCrud.update_db_link(user_id=message.from_user.id, db_link=db_id)
     await message.answer("👍")
