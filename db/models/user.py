@@ -7,5 +7,5 @@ class User(Base):
     __tablename__ = "user"
 
     user_id: Mapped[int] = mapped_column(primary_key=True)
-    db_link: Mapped[str]
+    db_link: Mapped[str] = mapped_column(nullable=True)
 
