@@ -26,7 +26,7 @@ async def get_start(message: Message):
 
 @router.message(F.text.regexp(r'https://www\.notion\.so/[a-f\d]+\?v=[a-f\d]+&pvs=\d+'))
 async def get_notion_db_link_and_tasks(message: Message):
-    """Добавленяем ссылку на notion в бд"""
+    """Добавляем ссылку на notion в бд"""
     db_id = get_notion_db_id(message.text)
     await UserCrud.update_db_link(user_id=message.from_user.id, db_link=db_id)
     db_rows = await read_db(client=client, database_id=db_id)
