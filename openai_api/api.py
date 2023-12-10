@@ -3,12 +3,13 @@ from pprint import pprint
 
 from openai import AsyncOpenAI
 from httpx import AsyncClient
+from config import settings
 
 
 class OpenAIHelper:
     def __init__(self):
-        http_cliet = AsyncClient(proxies="http://103.30.182.116:80")
-        self.client = AsyncOpenAI(api_key="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", http_client=http_cliet)
+        http_cliet = AsyncClient(proxies=...)
+        self.client = AsyncOpenAI(api_key=settings.OPENAI_TOKEN, http_client=http_cliet)
 
     async def create_assistant(self):
         assistant = await self.client.beta.assistants.create(
@@ -58,4 +59,3 @@ class OpenAIHelper:
             thread_id=thread.id
         )
         return messages
-
