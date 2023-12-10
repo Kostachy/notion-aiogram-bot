@@ -39,11 +39,11 @@ class OpenAIHelper:
         thread = await self.client.beta.threads.create()
         return thread
 
-    async def add_message_to_thread(self, thread, some_json):
+    async def add_message_to_thread(self, thread, message: str):
         message = await self.client.beta.threads.messages.create(
             thread_id=thread.id,
             role="user",
-            content=f"I need to find task and its start and end time in the json: {some_json}"
+            content=message
         )
         return message
 
