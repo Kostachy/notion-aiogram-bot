@@ -8,7 +8,7 @@ from config import settings
 
 class OpenAIHelper:
     def __init__(self):
-        http_cliet = AsyncClient(proxies=...)
+        http_cliet = AsyncClient(proxies="http://5.189.172.158:3128")
         self.client = AsyncOpenAI(api_key=settings.OPENAI_TOKEN, http_client=http_cliet)
 
     async def create_assistant(self):
@@ -40,12 +40,11 @@ class OpenAIHelper:
         return thread
 
     async def add_message_to_thread(self, thread, message: str):
-        message = await self.client.beta.threads.messages.create(
+        await self.client.beta.threads.messages.create(
             thread_id=thread.id,
             role="user",
             content=message
         )
-        return message
 
     async def run_assistant(self, thread, assistant):
         run = await self.client.beta.threads.runs.create(
@@ -59,3 +58,17 @@ class OpenAIHelper:
             thread_id=thread.id
         )
         return messages
+
+
+# async def main():
+#     assistant = OpenAIHelper()
+#     assistant_object = await assistant.create_assistant()
+#     thread = await assistant.create_thread()
+#     await assistant.add_message_to_thread(thread, 'dfdfd')
+#     await assistant.run_assistant(thread, assistant_object)
+#     message = await assistant.display_assistant_responce(thread)
+#     print(message)
+#
+#
+# if __name__ == "__main__":
+#     asyncio.run(main())

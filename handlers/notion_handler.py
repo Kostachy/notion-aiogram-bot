@@ -10,9 +10,11 @@ from utils import get_notion_db_id
 from notion_client import AsyncClient
 from config import settings
 from notion.notion_api import read_db
+from openai_api.api import OpenAIHelper
 
 router = Router()
 client = AsyncClient(auth=settings.NOTION_TOKEN)
+assistant = OpenAIHelper()
 
 
 @router.message(CommandStart())
@@ -21,7 +23,8 @@ async def get_start(message: Message):
     print(await UserCrud.get_user_id(message.from_user.id))
     if not await UserCrud.get_user_id(message.from_user.id):
         await UserCrud.create_user(user_id=message.from_user.id)
-    await message.answer('Вы были успешно зарегистрированы!✅\nТеперь введите ссылку на вашу базу данных из Notion')
+    await message.answer('Вы были успешно зарегистрированы!✅\nТеперь введите ссылку на вашу базу данных из Notion',
+                         reply_markup=default_keybord)
 
 
 @router.message(F.text.regexp(r'https://www\.notion\.so/[a-f\d]+\?v=[a-f\d]+&pvs=\d+'))
@@ -33,6 +36,12 @@ async def get_notion_db_link_and_tasks(message: Message):
     await message.answer(f"{db_rows}", reply_markup=default_keybord)
 
 
-@router.message(F.text == "OpenAI-test")
+@router.message(F.text)
 async def get_ai_help(message: Message):
-    pass
+    assistant_object = await assistant.create_assistant()
+    thread = await assistant.create_thread()
+    await assistant.add_message_to_thread(thread, message.text)
+    await assistant.run_assistant(thread, assistant_object)
+    message_from_ai = await assistant.display_assistant_responce(thread)
+    await message.answer(message_from_ai)
+
