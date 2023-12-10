@@ -8,6 +8,8 @@ class Settings(BaseSettings):
 
     NOTION_TOKEN: str
 
+    OPENAI_TOKEN: str
+
     DB_PORT: str
     DB_HOST: str
     DB_USER: str
