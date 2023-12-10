@@ -15,10 +15,10 @@ async def read_text(client, page_id):
 
 
 def safe_get(data, dot_chained_keys):
-    '''
+    """
         {'a': {'b': [{'c': 1}]}}
         safe_get(data, 'a.b.0.c') -> 1
-    '''
+    """
     keys = dot_chained_keys.split('.')
     for key in keys:
         try:
