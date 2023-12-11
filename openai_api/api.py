@@ -1,6 +1,3 @@
-import asyncio
-from pprint import pprint
-
 from openai import AsyncOpenAI
 from httpx import AsyncClient
 from config import settings
@@ -14,7 +11,7 @@ class OpenAIHelper:
     async def create_assistant(self):
         assistant = await self.client.beta.assistants.create(
             name="Task Assistant",
-            instructions="You have to analyze and find the task and its start and end time in the json",
+            instructions="",
             tools=[{
                 "type": "function",
                 "function": {
@@ -60,15 +57,4 @@ class OpenAIHelper:
         return messages
 
 
-# async def main():
-#     assistant = OpenAIHelper()
-#     assistant_object = await assistant.create_assistant()
-#     thread = await assistant.create_thread()
-#     await assistant.add_message_to_thread(thread, 'dfdfd')
-#     await assistant.run_assistant(thread, assistant_object)
-#     message = await assistant.display_assistant_responce(thread)
-#     print(message)
-#
-#
-# if __name__ == "__main__":
-#     asyncio.run(main())
+openai_client = OpenAIHelper()

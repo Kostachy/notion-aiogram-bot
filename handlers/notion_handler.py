@@ -7,14 +7,10 @@ from aiogram.types import Message
 from db.crud.user_crud import UserCrud
 from keyboards.regular_keyboard import default_keybord
 from utils import get_notion_db_id
-from notion_client import AsyncClient
-from config import settings
-from notion.notion_api import read_db
-from openai_api.api import OpenAIHelper
+from notion.notion_api import client
+from openai_api.api import openai_client
 
 router = Router()
-client = AsyncClient(auth=settings.NOTION_TOKEN)
-assistant = OpenAIHelper()
 
 
 @router.message(CommandStart())
@@ -32,16 +28,16 @@ async def get_notion_db_link_and_tasks(message: Message):
     """Добавляем ссылку на notion в бд"""
     db_id = get_notion_db_id(message.text)
     await UserCrud.update_db_link(user_id=message.from_user.id, db_link=db_id)
-    db_rows = await read_db(client=client, database_id=db_id)
+    db_rows = await client.read_db(database_id=db_id)
     await message.answer(f"{db_rows}", reply_markup=default_keybord)
 
 
 @router.message(F.text)
 async def get_ai_help(message: Message):
-    assistant_object = await assistant.create_assistant()
-    thread = await assistant.create_thread()
-    await assistant.add_message_to_thread(thread, message.text)
-    await assistant.run_assistant(thread, assistant_object)
-    message_from_ai = await assistant.display_assistant_responce(thread)
+    assistant_object = await openai_client.create_assistant()
+    thread = await openai_client.create_thread()
+    await openai_client.add_message_to_thread(thread, message.text)
+    await openai_client.run_assistant(thread, assistant_object)
+    message_from_ai = await openai_client.display_assistant_responce(thread)
     await message.answer(message_from_ai)
 
