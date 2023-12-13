@@ -1,6 +1,5 @@
 from openai import AsyncOpenAI
 from config import settings
-from openai_functions import insert_task_and_time
 
 
 class OpenAIHelper:
@@ -15,7 +14,32 @@ class OpenAIHelper:
             does not interfere other tasks that are already in the database.""",
             tools=[{
                 "type": "function",
-                "function": insert_task_and_time
+                "function": {
+                    "name": "insert_task_and_time",
+                    "description": "A function that takes in a task, start date, and end date and inserts it into the JSON from Notion API",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "task": {
+                                "type": "string",
+                                "description": "Task"
+                            },
+                            "start_date": {
+                                "type": "string",
+                                "description": "Start date of the task in ISO 8601 format"
+                            },
+                            "end_date": {
+                                "type": "string",
+                                "description": "End date of the task in ISO 8601 format"
+                            }
+                        },
+                        "required": [
+                            "task",
+                            "start_date",
+                            "end_date"
+                        ]
+                    }
+                }
             }],
             model="gpt-3.5-turbo-1106",
         )
