@@ -56,7 +56,7 @@ async def get_opneai_help(message: Message):
             run_id=run.id
         )
         await asyncio.sleep(3)
-        await message.reply(run.status)
+        await message.answer(f"{run.status}---{run.last_error}")
     tools_to_call = run.required_action.submit_tool_outputs.tool_calls
     tools_output_array = []
     for tool in tools_to_call:
