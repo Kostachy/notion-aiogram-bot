@@ -19,8 +19,6 @@ async def get_start(message: Message):
     """Регистрируем юзера"""
     if not await UserCrud.get_user_id(message.from_user.id):
         await UserCrud.create_user(user_id=message.from_user.id)
-        thread = await openai_client.beta.threads.create()
-        await UserCrud.update_thread_id(thread_id=thread.id, user_id=message.from_user.id)
         await message.answer('Вы были успешно зарегистрированы!✅\nТеперь введите ссылку на вашу базу данных из Notion')
     else:
         await message.answer('Вы уже зарегестрированы')
@@ -36,7 +34,12 @@ async def get_notion_db_link_and_tasks(message: Message):
 
 @router.message(F.text)
 async def get_opneai_help(message: Message):
-    thread_id = await UserCrud.get_thread_id(user_id=message.from_user.id)
+    if not await UserCrud.get_thread_id(user_id=message.from_user.id):
+        thread = await openai_client.beta.threads.create()
+        thread_id = thread.id
+    else:
+        thread_id = await UserCrud.get_thread_id(user_id=message.from_user.id)
+
     await openai_client.beta.threads.messages.create(
         thread_id=thread_id,
         role="user",
