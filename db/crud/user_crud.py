@@ -12,7 +12,7 @@ class UserCrud:
         async with async_session() as session:
             query = select(cls.model.user_id).filter_by(user_id=user_id)
             result = await session.execute(query)
-            return result.scalar().one_or_none()
+            return result.scalar()
 
     @classmethod
     async def create_user(cls, **data):
@@ -40,11 +40,11 @@ class UserCrud:
         async with async_session() as session:
             query = select(cls.model.thread_id).where(cls.model.user_id == user_id)
             result = await session.execute(query)
-            return result.scalar().one_or_none()
+            return result.scalar()
 
     @classmethod
     async def get_database_id(cls, user_id: int):
         async with async_session() as session:
             query = select(cls.model.db_link).where(cls.model.user_id == user_id)
             result = await session.execute(query)
-            return result.scalar().one_or_none()
+            return result.scalar()
