@@ -28,7 +28,7 @@ async def get_notion_db_link_and_tasks(message: Message):
     """Добавляем ссылку на notion в бд"""
     db_id = get_notion_db_id(message.text)
     await UserCrud.update_db_link(user_id=message.from_user.id, db_link=db_id)
-    db_rows = await client.read_db(database_id=db_id)
+    db_rows = await client.get_db(database_id=db_id)
     await message.answer(f"{db_rows}", reply_markup=default_keybord)
 
 

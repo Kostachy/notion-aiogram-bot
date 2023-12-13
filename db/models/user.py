@@ -8,4 +8,5 @@ class User(Base):
 
     user_id: Mapped[int] = mapped_column(primary_key=True)
     db_link: Mapped[str] = mapped_column(nullable=True)
+    thread_id: Mapped[str] = mapped_column(nullable=True)
 

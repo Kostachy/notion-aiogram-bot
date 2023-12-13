@@ -1,3 +1,6 @@
+import asyncio
+from pprint import pprint
+
 from notion_client import AsyncClient
 import json
 from utils import safe_get
@@ -5,13 +8,21 @@ from utils import safe_get
 from config import settings
 
 
+def write_dict_to_file_as_json(content, file_name):
+    content_as_json_str = json.dumps(content)
+
+    with open(file_name, 'w') as f:
+        f.write(content_as_json_str)
+
+
 class NotionHelper:
     def __init__(self):
         self.client = AsyncClient(auth=settings.NOTION_TOKEN)
 
     async def read_db(self, database_id: str):
+        """Func for test"""
         db_rows = await self.client.databases.query(database_id=database_id)
-        # write_dict_to_file_as_json(db_rows, 'db_rows.json')
+        write_dict_to_file_as_json(db_rows, 'db_rows.json')
 
         simple_rows = []
         for row in db_rows['results']:
@@ -28,30 +39,19 @@ class NotionHelper:
             })
             return simple_rows
 
-    async def write_row(self, database_id: str, task_name: str, tags: str, start_date: str, end_date: str):
+    async def write_row(self, database_id: str, data: dict) -> None:
         await self.client.pages.create(
             **{
                 'parent': {
                     'database_id': database_id
                 },
-                'properties': {
-                    'Task_Name': {'title': [{'text': {'content': task_name}}]},
-                    "Tags": {"multi_select": [{"name": tags}]},
-                    'Date': {'date': {'start': start_date, 'end': end_date}}
-                }
+                'properties': data
             }
         )
 
-    async def read_text(self, page_id):
-        response = await self.client.blocks.children.list(block_id=page_id)
-        return response
-
-    @staticmethod
-    def write_dict_to_file_as_json(content, file_name):
-        content_as_json_str = json.dumps(content)
-
-        with open(file_name, 'w') as f:
-            f.write(content_as_json_str)
+    async def get_db(self, database_id: str):
+        db_rows = await self.client.databases.query(database_id=database_id)
+        return db_rows
 
 
 client = NotionHelper()
