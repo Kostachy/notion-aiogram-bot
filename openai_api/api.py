@@ -5,8 +5,8 @@ from config import settings
 openai_client = AsyncOpenAI(api_key=settings.OPENAI_TOKEN)
 
 
-async def create_assistant(self):
-    assistant = await self.client.beta.assistants.create(
+async def create_assistant():
+    assistant = await openai_client.beta.assistants.create(
         name="Task Assistant",
         instructions="""You are a bot that must analyze the json that was received in response from 
         the Notion database and insert a task along with its start time and end time so that this task 
