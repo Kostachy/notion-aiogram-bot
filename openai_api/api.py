@@ -1,46 +1,30 @@
 import asyncio
-from pprint import pprint
 
 from openai import AsyncOpenAI
-from httpx import AsyncClient
 from config import settings
+from functions import insert_task_and_time
+from httpx import AsyncClient
+
+
+# token: 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
 
 
 class OpenAIHelper:
     def __init__(self):
+        # hhtp_client = AsyncClient(proxies="http://5.189.172.158:3128")
         self.client = AsyncOpenAI(api_key=settings.OPENAI_TOKEN)
 
     async def create_assistant(self):
         assistant = await self.client.beta.assistants.create(
             name="Task Assistant",
-            instructions="",
+            instructions="""You are a bot that must analyze the json that was received in response from 
+            the Notion database and insert a task along with its start time and end time so that this task 
+            does not interfere other tasks that are already in the database.""",
             tools=[{
                 "type": "function",
-                "function": {
-                    "name": "get_weather",
-                    "description": "Determine weather in my location",
-                    "parameters": {
-                        "type": "object",
-                        "properties": {
-                            "location": {
-                                "type": "string",
-                                "description": "Country, city or other places"
-                            },
-                            "unit": {
-                                "type": "string",
-                                "enum": [
-                                    "c",
-                                    "f"
-                                ]
-                            }
-                        },
-                        "required": [
-                            "location"
-                        ]
-                    }
-                }
+                "function": insert_task_and_time
             }],
-            model="gpt-3.5-turbo",
+            model="gpt-3.5-turbo-1106",
         )
         return assistant
 
@@ -147,7 +131,3 @@ class OpenAIHelper:
 
 
 openai_client = OpenAIHelper()
-
-
-# if __name__ == "__main__":
-#     asyncio.run(openai_client.all())

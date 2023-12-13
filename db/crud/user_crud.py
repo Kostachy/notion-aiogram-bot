@@ -27,3 +27,19 @@ class UserCrud:
             query = update(cls.model).values(db_link=db_link).where(cls.model.user_id == user_id)
             await session.execute(query)
             await session.commit()
+
+    @classmethod
+    async def update_thread_id(cls, thread_id: str, user_id: int):
+        async with async_session() as session:
+            query = update(cls.model).values(thread_id=thread_id).where(cls.model.user_id == user_id)
+            await session.execute(query)
+            await session.commit()
+
+    @classmethod
+    async def get_thread_id(cls, user_id: int):
+        async with async_session() as session:
+            query = select(cls.model.thread_id).where(cls.model.user_id == user_id)
+            result = await session.execute(query)
+            return result.one_or_none()
+
+

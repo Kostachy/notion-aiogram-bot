@@ -2,6 +2,8 @@ import asyncio
 import logging
 
 from aiogram import Bot, Dispatcher
+from aiogram.fsm.storage.memory import MemoryStorage
+
 from handlers.notion_handler import router
 from config import settings
 
@@ -11,9 +13,9 @@ async def main():
         level=logging.INFO,
         format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
     )
-
+    storage = MemoryStorage()
     bot = Bot(token=settings.BOT_TOKEN)
-    dp = Dispatcher()
+    dp = Dispatcher(storage=storage)
     dp.include_router(router)
 
     await bot.delete_webhook(drop_pending_updates=True)

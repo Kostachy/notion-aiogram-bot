@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     NOTION_TOKEN: str
 
     OPENAI_TOKEN: str
+    ASSISTANT_ID: str
 
     DB_PORT: str
     DB_HOST: str
