@@ -1,4 +1,5 @@
 import logging
+from pprint import pprint
 
 from aiogram import Router, F
 from aiogram.filters import CommandStart
@@ -16,7 +17,6 @@ router = Router()
 @router.message(CommandStart())
 async def get_start(message: Message):
     """Регистрируем юзера"""
-    print(await UserCrud.get_user_id(message.from_user.id))
     if not await UserCrud.get_user_id(message.from_user.id):
         await UserCrud.create_user(user_id=message.from_user.id)
     await message.answer('Вы были успешно зарегистрированы!✅\nТеперь введите ссылку на вашу базу данных из Notion',
@@ -39,5 +39,5 @@ async def get_ai_help(message: Message):
     await openai_client.add_message_to_thread(thread, message.text)
     await openai_client.run_assistant(thread, assistant_object)
     message_from_ai = await openai_client.display_assistant_responce(thread)
-    await message.answer(message_from_ai)
-
+    pprint(message_from_ai)
+    await message.answer("OK")
