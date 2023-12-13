@@ -34,9 +34,9 @@ async def get_notion_db_link_and_tasks(message: Message):
 
 @router.message(F.text)
 async def get_opneai_help(message: Message):
-    thread = await UserCrud.get_thread_id(user_id=message.from_user.id)
-    print(thread)
-    await openai_client.add_message_to_thread(thread=thread.id, message_id=message.text)
+    thread_id = await UserCrud.get_thread_id(user_id=message.from_user.id)
+    print(thread_id)
+    await openai_client.add_message_to_thread(thread=thread_id, message_id=message.text)
     await message.answer("")
 
 
