@@ -42,4 +42,9 @@ class UserCrud:
             result = await session.execute(query)
             return result.scalar().one_or_none()
 
-
+    @classmethod
+    async def get_database_id(cls, user_id: int):
+        async with async_session() as session:
+            query = select(cls.model.db_link).where(cls.model.user_id == user_id)
+            result = await session.execute(query)
+            return result.scalar().one_or_none()

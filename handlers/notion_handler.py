@@ -40,10 +40,12 @@ async def get_opneai_help(message: Message):
     else:
         thread_id = await UserCrud.get_thread_id(user_id=message.from_user.id)
 
+    notion_db_id = await UserCrud.get_database_id(user_id=message.from_user.id)
+    db_json = await notion_client.get_db(database_id=notion_db_id)
     await openai_client.beta.threads.messages.create(
         thread_id=thread_id,
         role="user",
-        content=message.text
+        content=f"{message.text}, {db_json}"
     )
     run = await openai_client.beta.threads.runs.create(
         thread_id=thread_id,
