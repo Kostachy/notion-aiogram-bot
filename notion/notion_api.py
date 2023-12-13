@@ -54,4 +54,4 @@ class NotionHelper:
         return db_rows
 
 
-client = NotionHelper()
+notion_client = NotionHelper()

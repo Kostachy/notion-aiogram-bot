@@ -6,7 +6,7 @@ from aiogram.types import Message
 
 from db.crud.user_crud import UserCrud
 from utils import get_notion_db_id
-from notion.notion_api import client
+from notion.notion_api import notion_client
 from openai_api.api import openai_client
 
 router = Router()
@@ -17,7 +17,7 @@ async def get_start(message: Message):
     """Регистрируем юзера"""
     if not await UserCrud.get_user_id(message.from_user.id):
         await UserCrud.create_user(user_id=message.from_user.id)
-        thread = openai_client.create_thread()
+        thread = openai_client.beta.threads.create()
         await UserCrud.update_thread_id(thread_id=thread.id, user_id=message.from_user.id)
         await message.answer('Вы были успешно зарегистрированы!✅\nТеперь введите ссылку на вашу базу данных из Notion')
     else:
