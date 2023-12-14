@@ -1,13 +1,12 @@
 from openai import AsyncOpenAI
 from config import settings
 
-
 openai_client = AsyncOpenAI(api_key=settings.OPENAI_TOKEN)
 
 
 async def create_assistant():
     assistant = await openai_client.beta.assistants.create(
-        name="Task Assistant",
+        name="Test Task Assistant",
         instructions="""You are a bot that must analyze the json that was received in response from 
         the Notion database and insert a task along with its start time and end time so that this task 
         does not interfere other tasks that are already in the database.""",
@@ -19,9 +18,9 @@ async def create_assistant():
                 "parameters": {
                     "type": "object",
                     "properties": {
-                        "task": {
+                        "Task name": {
                             "type": "string",
-                            "description": "Task"
+                            "description": "Task name"
                         },
                         "start_date": {
                             "type": "string",
@@ -42,3 +41,4 @@ async def create_assistant():
         }],
         model="gpt-3.5-turbo-1106",
     )
+    return assistant

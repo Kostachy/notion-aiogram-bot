@@ -55,7 +55,7 @@ async def get_opneai_help(message: Message):
             thread_id=thread_id,
             run_id=run.id
         )
-        await asyncio.sleep(3)
+        await asyncio.sleep(2)
         await message.answer(f"{run.status}---{run.last_error}")
     tools_to_call = run.required_action.submit_tool_outputs.tool_calls
     tools_output_array = []
@@ -80,14 +80,14 @@ async def get_opneai_help(message: Message):
             thread_id=thread_id,
             run_id=run.id
         )
+        await asyncio.sleep(2)
         await message.reply(run.status)
 
     messages = openai_client.beta.threads.messages.list(
         thread_id=thread_id
     )
 
-    for text in messages:
-        await message.answer(text.content[0].text.value)
+    await notion_client.write_row(messages.data[1].content[0].text.value)
 
 
 @router.message()
