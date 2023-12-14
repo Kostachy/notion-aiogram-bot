@@ -55,6 +55,10 @@ async def get_notion_db_link_and_tasks(message: Message):
 
 @router.message(F.text)
 async def get_opneai_help(message: Message):
+    """Сначала вытаскиваем thread_id из бд, если не находим то создаем новый и добовляем в бд.
+    Далее вытаскиваем что имеется в базе данных Notion и форматируем под определнный формат.
+    Создаем новое сообщение OpenAI ассистенту с  наполнением Notion и с новой тасклй пользователя.
+    Получаем ответ от ассистента и закидываем обратно в Notion"""
     if not await UserCrud.get_thread_id(user_id=message.from_user.id):
         thread = await openai_client.beta.threads.create()
         thread_id = thread.id
@@ -106,15 +110,25 @@ async def get_opneai_help(message: Message):
             thread_id=thread_id,
             run_id=run.id
         )
-        await asyncio.sleep(3)
-        await message.answer(run.status)
+        logging.info("Run status: %s", run.status)
 
     messages = await openai_client.beta.threads.messages.list(
         thread_id=thread_id
     )
-    logging.info(messages)
-    await message.answer(messages.data[0].content)
-    # await notion_client.simple_write(messages.data[0].content[1].text)
+    logging.info("Messages: %s", messages.data[0].content[0].text.value)
+
+    formatted_task = messages.data[0].content[0].text.value.split('|')
+    category = formatted_task[0]
+    title = formatted_task[1]
+    priority = formatted_task[2]
+    due_date = formatted_task[3]
+    await notion_client.write_row_in_notion(database_id=notion_db_id,
+                                            category=category,
+                                            title=title,
+                                            priority=priority,
+                                            due_date=due_date)
+
+    await message.answer("✅Ваша задача успешно записана✅")
 
 
 @router.message()

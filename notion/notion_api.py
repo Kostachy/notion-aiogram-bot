@@ -10,14 +10,14 @@ class NotionHelper:
     def __init__(self):
         self.client = AsyncClient(auth=settings.NOTION_TOKEN)
 
-    async def write_row(self, database_id: str, data: dict) -> None:
+    async def write_row_in_notion(self, database_id: str, title: str, category: str, priority: str, due_date: str):
         properties = {
             "Title": {
                 "id": "title",
                 "type": "title",
                 "title": [{
                     "text": {
-                        "content": data["title"]
+                        "content": title
                     }
                 }]
             },
@@ -25,21 +25,21 @@ class NotionHelper:
                 "id": "category",
                 "type": "title",
                 "title": {
-                    "name": data["category"]
+                    "name": category
                 }
             },
             "Priority": {
                 "id": "priority",
                 "type": "select",
                 "select": {
-                    "name": data["priority"]
+                    "name": priority
                 }
             },
             "Due Date": {
                 "id": "Due Date",
                 "type": "date",
                 "date": {
-                    "start": data["date"],
+                    "start": due_date,
                 }
             }
         }
