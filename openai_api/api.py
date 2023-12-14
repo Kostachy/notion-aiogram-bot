@@ -20,7 +20,7 @@ async def create_assistant():
                     "properties": {
                         "Task name": {
                             "type": "string",
-                            "description": "Task name"
+                            "description": "Task name e.g. do homework of call Ryan"
                         },
                         "start_date": {
                             "type": "string",

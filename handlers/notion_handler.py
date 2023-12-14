@@ -93,7 +93,8 @@ async def get_opneai_help(message: Message):
         thread_id=thread_id
     )
     logging.info(messages.data[1].content[0].text.value)
-    await notion_client.simple_write(messages.data[1].content[0].text.value)
+    logging.info(messages.data[1].content[0].text.value)
+    await notion_client.simple_write(messages.data[1].content[0].MessageContentText)
 
 
 @router.message()

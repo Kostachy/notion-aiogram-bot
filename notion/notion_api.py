@@ -39,17 +39,41 @@ class NotionHelper:
             })
             return simple_rows
 
-    async def write_row(self, database_id: str, data: dict) -> None:
-        await self.client.pages.create(
-            **{
-                'parent': {
-                    'database_id': database_id
-                },
-                'properties': data
-            }
-        )
+    # async def write_row(self, database_id: str, data: dict) -> None:
+    #     properties = {
+    #         "Task Name": {
+    #             "id": "category",
+    #             "type": "title",
+    #             "title": {
+    #                 "name": type
+    #             }
+    #         },
+    #         "Priority": {
+    #             "id": "priority",
+    #             "type": "select",
+    #             "select": {
+    #                 "name": priority
+    #             }
+    #         },
+    #         "Due Date": {
+    #             "id": "Due Date",
+    #             "type": "date",
+    #             "date": {
+    #                 "start": start_date,
+    #                 "end": end_date
+    #             }
+    #         }
+    #     }
+    #     await self.client.pages.create(
+    #         **{
+    #             'parent': {
+    #                 'database_id': database_id
+    #             },
+    #             'properties': properties
+    #         }
+    #     )
 
-    async def simple_write(self, data: str):
+    async def simple_write(self, data):
         await self.client.pages.create(data)
 
     async def get_db(self, database_id: str):
