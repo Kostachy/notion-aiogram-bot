@@ -1,3 +1,4 @@
+import json
 from urllib.parse import urlparse
 
 
@@ -21,4 +22,11 @@ def safe_get(data, dot_chained_keys):
         except (KeyError, TypeError, IndexError):
             return None
     return data
+
+
+def write_dict_to_file_as_json(content, file_name):
+    content_as_json_str = json.dumps(content)
+
+    with open(file_name, 'w') as f:
+        f.write(content_as_json_str)
 
