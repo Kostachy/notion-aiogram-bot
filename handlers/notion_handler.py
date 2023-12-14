@@ -1,4 +1,5 @@
 import asyncio
+import logging
 
 from aiogram import Router, F
 from aiogram.filters import CommandStart
@@ -36,8 +37,10 @@ async def get_opneai_help(message: Message):
     if not await UserCrud.get_thread_id(user_id=message.from_user.id):
         thread = await openai_client.beta.threads.create()
         thread_id = thread.id
+        logging.info('Created thread %s', thread_id)
     else:
         thread_id = await UserCrud.get_thread_id(user_id=message.from_user.id)
+        logging.info('Get thread %s', thread_id)
 
     notion_db_id = await UserCrud.get_database_id(user_id=message.from_user.id)
     db_json = await notion_client.get_db(database_id=notion_db_id)
@@ -87,8 +90,7 @@ async def get_opneai_help(message: Message):
         thread_id=thread_id
     )
 
-    await notion_client.write_row(messages.data[1].content[0].text.value)
-
+    await notion_client.simple_write(data=messages.data[1].content[0].text.value)
 
 
 @router.message()

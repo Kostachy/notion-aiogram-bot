@@ -49,8 +49,8 @@ class NotionHelper:
             }
         )
 
-    async def simple_write(self, data: dict) -> None:
-        await self.client.pages.create({**data})
+    async def simple_write(self, data: str):
+        await self.client.pages.create(data)
 
     async def get_db(self, database_id: str):
         db_rows = await self.client.databases.query(database_id=database_id)
