@@ -37,6 +37,7 @@ async def get_opneai_help(message: Message):
     if not await UserCrud.get_thread_id(user_id=message.from_user.id):
         thread = await openai_client.beta.threads.create()
         thread_id = thread.id
+        await UserCrud.update_thread_id(thread_id=thread_id, user_id=message.from_user.id)
         logging.info('Created thread %s', thread_id)
     else:
         thread_id = await UserCrud.get_thread_id(user_id=message.from_user.id)
@@ -61,6 +62,8 @@ async def get_opneai_help(message: Message):
         await asyncio.sleep(2)
         await message.answer(f"{run.status}---{run.last_error}")
     tools_to_call = run.required_action.submit_tool_outputs.tool_calls
+    logging.info(tools_to_call)
+
     tools_output_array = []
     for tool in tools_to_call:
         tool_call_id = tool.id
@@ -89,7 +92,7 @@ async def get_opneai_help(message: Message):
     messages = await openai_client.beta.threads.messages.list(
         thread_id=thread_id
     )
-
+    logging.info(messages.data[1].content[0].text.value)
     await notion_client.simple_write(data=messages.data[1].content[0].text.value)
 
 
