@@ -90,6 +90,7 @@ async def get_opneai_help(message: Message):
     await notion_client.write_row(messages.data[1].content[0].text.value)
 
 
+
 @router.message()
 async def any_message(message: Message):
     """Хэндлер который отвечает на любой тип сообщений"""
