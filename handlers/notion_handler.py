@@ -48,19 +48,13 @@ async def get_opneai_help(message: Message):
     await openai_client.beta.threads.messages.create(
         thread_id=thread_id,
         role="user",
-        content=f"{message.text}, {db_json}"
+        content=f"Insert this {message.text} to {db_json}"
     )
     run = await openai_client.beta.threads.runs.create(
         thread_id=thread_id,
         assistant_id=settings.ASSISTANT_ID
     )
-    while run.status not in ["completed", "failed", "requires_action"]:
-        run = await openai_client.beta.threads.runs.retrieve(
-            thread_id=thread_id,
-            run_id=run.id
-        )
-        await asyncio.sleep(2)
-        await message.answer(f"{run.status}---{run.last_error}")
+
     tools_to_call = run.required_action.submit_tool_outputs.tool_calls
     logging.info(tools_to_call)
 
@@ -92,13 +86,8 @@ async def get_opneai_help(message: Message):
     messages = await openai_client.beta.threads.messages.list(
         thread_id=thread_id
     )
-    logging.info(messages.data[1].content[0].text.value)
-    logging.info(messages.data[1].content[0].text)
-    logging.info(messages.data[1].content[0])
-    logging.info(messages.data[1])
-    logging.info(messages.data)
     logging.info(messages)
-    await notion_client.simple_write(messages.data[1].content[0].text)
+    await notion_client.simple_write(messages.data[0].content[1].text)
 
 
 @router.message()
