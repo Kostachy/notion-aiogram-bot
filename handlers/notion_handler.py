@@ -83,7 +83,7 @@ async def get_opneai_help(message: Message):
         await asyncio.sleep(2)
         await message.reply(run.status)
 
-    messages = openai_client.beta.threads.messages.list(
+    messages = await openai_client.beta.threads.messages.list(
         thread_id=thread_id
     )
 
