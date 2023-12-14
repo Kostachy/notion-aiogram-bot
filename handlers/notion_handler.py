@@ -74,7 +74,7 @@ async def get_opneai_help(message: Message):
     await openai_client.beta.threads.messages.create(
         thread_id=thread_id,
         role="user",
-        content=f"Existing tasks in the notion: {', '.join(map(str, list_of_existing_tasks))}\nNew task: {message.text}"
+        content=f"Existing tasks in the notion: {', '.join(map(str, list_of_existing_tasks))}. Here's a new task, transform it: {message.text}"
     )
     run = await openai_client.beta.threads.runs.create(
         thread_id=thread_id,
