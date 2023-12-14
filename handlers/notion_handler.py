@@ -110,6 +110,7 @@ async def get_opneai_help(message: Message):
             thread_id=thread_id,
             run_id=run.id
         )
+        await asyncio.sleep(3)
         logging.info("Run status: %s", run.status)
 
     messages = await openai_client.beta.threads.messages.list(
