@@ -1,6 +1,6 @@
 import logging
 
-from notion_client import AsyncClient
+from notion_client import AsyncClient, APIResponseError
 from utils import safe_get
 
 from config import settings
@@ -52,7 +52,7 @@ class NotionHelper:
                     'properties': properties
                 }
             )
-        except Exception as err:
+        except APIResponseError as err:
             logging.error(f"Notion API error - {err}")
 
     async def get_db(self, database_id: str):
