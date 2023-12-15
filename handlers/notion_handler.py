@@ -66,7 +66,7 @@ async def get_opneai_help(message: Message):
     for row in notion_db:
         list_of_existing_tasks.append(f"{row['Category']}|{row['Title']}|{row['Priority']}|{row['Due date']}")
 
-    await openai_client.beta.threads.messages.create(
+    user_message = await openai_client.beta.threads.messages.create(
         thread_id=thread_id,
         role="user",
         content=f"Existing tasks in the notion: {', '.join(map(str, list_of_existing_tasks))}. Here's a new task: {message.text}"
@@ -86,6 +86,7 @@ async def get_opneai_help(message: Message):
 
     messages = await openai_client.beta.threads.messages.list(
         thread_id=thread_id,
+        after=user_message.id
     )
 
     formatted_task = messages.data[0].content[0].text.value.replace('"', '').split('|')
