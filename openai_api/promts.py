@@ -13,13 +13,14 @@ prompt = """
    The first section of the output will begin with the category of the input, for example: "work|", "thought|", or "social|".
    The second section of the output will be the title. The title is the input task itself unmodified.
    The third section of the output will be the priority.
-   The fourth section is a recommended due date in the format YYYY-MM-DD.  Given that the current date is date that is calculated using the your code interpreter, consider the category, title, priority to determine a recommended due date.  The recommended due date must always be after the current date.
-   Firstly you get tasks that the user already has, you need to take them into account when creating new ones.
-   you must give me the answer in the format: "category|task that input user|priority|due date"
-   For example you got the input: "Finish the presentation for tomorrow's meeting"; the output will be: "work|Finish presentation|1|2023-05-13".
-   For example you got the input: "I need to call Yuki"; the output will be: "social|Call Yuki|2|2023-02-24".
-   For example you got the input: "Buy groceries after work"; the output will be: "personal|Buy groceries|3|2023-04-03".
-   For example you got the input: "I need to call Yuki"; the output will be: "social|Call Yuki|2|2023-02-24".
-   For example you got the input: "I should start exercising more"; the output will be: "thought|I should start exercising more|3|2023-08-15".
-   For example you got the input: "Prepare for the job interview next week"; the output will be: "work|Prepare for job interview|1|2023-08-13".
+   The fourth section is a recommended due date in the format YYYY-MM-DD.  Given that the current date is date that is calculated using your Code Interpreter, consider the category, title, priority to determine a recommended due date.  The recommended due date must always be after the current date.
+   
+   Firstly you get tasks that the user already has, you need to take them into account when creating new ones, then you get a new task that needs to be converted.
+   You must give me the answer in the format: category|task that input user|priority|due date
+   For example you got the input: Finish the presentation for tomorrow's meeting; the output will be: work|Finish the presentation for tomorrow's meeting|1|2023-05-13
+   For example you got the input: I need to call Yuki; the output will be: social|Call Yuki|2|2023-02-24
+   For example you got the input: Buy groceries after work; the output will be: personal|Buy groceries after work|3|2023-04-03
+   For example you got the input: I need to call Yuki; the output will be: social|Call Yuki|2|2023-02-24
+   For example you got the input: I should start exercising more; the output will be: thought|I should start exercising more|3|2023-08-15
+   For example you got the input: Prepare for the job interview next week; the output will be: work|Prepare for job interview|1|2023-08-13
    """

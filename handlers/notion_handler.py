@@ -8,7 +8,7 @@ from aiogram.types import Message
 from config import settings
 from db.crud.user_crud import UserCrud
 from notion.notion_api import notion_client
-from openai_api.api import openai_client, update_assistant
+from openai_api.api import openai_client, update_assistant, create_assistant
 from utils import get_notion_db_id
 
 # from aiogram.fsm.context import FSMContext
@@ -39,7 +39,7 @@ async def get_notion_db_link_and_tasks(message: Message):
 @router.message(F.text == "OpenAi update")
 async def openai_update(message: Message):
     """Сервисная временная фича"""
-    await update_assistant()
+    await create_assistant()
     await message.answer("OK")
 
 
@@ -100,7 +100,7 @@ async def get_opneai_help(message: Message):
             thread_id=thread_id,
             run_id=run.id
         )
-        await asyncio.sleep(3)
+        await asyncio.sleep(5)
         logging.info("Run status: %s", run.status)
 
     messages = await openai_client.beta.threads.messages.list(

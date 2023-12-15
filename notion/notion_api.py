@@ -23,8 +23,8 @@ class NotionHelper:
             },
             "Category": {
                 "id": "category",
-                "type": "title",
-                "title": {
+                "type": "select",
+                "select": {
                     "name": category
                 }
             },
@@ -82,11 +82,17 @@ notion_client = NotionHelper()
 
 # async def main():
 #     notion_client = NotionHelper()
-#     notion_db = await notion_client.read_db("ca3b142971f4434cbedc5a78c7e129d7")
-#     result_list = []
-#     for row in notion_db:
-#         result_list.append(f"{row['Category']}|{row['Title']}|{row['Priority']}|{row['Due date']}")
-#     print(f"exist tasks: {', '.join(map(str, result_list))}")
+#     # notion_db = await notion_client.read_db("ca3b142971f4434cbedc5a78c7e129d7")
+#     # result_list = []
+#     # for row in notion_db:
+#     #     result_list.append(f"{row['Category']}|{row['Title']}|{row['Priority']}|{row['Due date']}")
+#     # print(f"exist tasks: {', '.join(map(str, result_list))}")
+#
+#     await notion_client.write_row_in_notion(database_id="ca3b142971f4434cbedc5a78c7e129d7",
+#                                             title="Make some food for dinner",
+#                                             category="Food",
+#                                             priority="3",
+#                                             due_date="2023-12-18")
 #
 #
 # if __name__ == "__main__":
