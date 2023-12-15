@@ -29,4 +29,3 @@ def write_dict_to_file_as_json(content, file_name):
 
     with open(file_name, 'w') as f:
         f.write(content_as_json_str)
-

@@ -1,9 +1,9 @@
 import logging
 
-from notion_client import AsyncClient, APIResponseError
-from utils import safe_get
+from notion_client import APIResponseError, AsyncClient
 
 from config import settings
+from utils import safe_get
 
 
 class NotionHelper:

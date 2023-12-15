@@ -1,6 +1,7 @@
 from openai import AsyncOpenAI
-from openai_api.promts import prompt
+
 from config import settings
+from openai_api.promts import prompt
 
 openai_client = AsyncOpenAI(api_key=settings.OPENAI_TOKEN)
 

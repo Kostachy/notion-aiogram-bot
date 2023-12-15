@@ -4,8 +4,8 @@ import logging
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 
-from handlers.notion_handler import router
 from config import settings
+from handlers.notion_handler import router
 
 
 async def main():

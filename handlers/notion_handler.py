@@ -1,18 +1,19 @@
 import asyncio
 import logging
 
-from aiogram import Router, F
+from aiogram import F, Router
 from aiogram.filters import CommandStart
 from aiogram.types import Message
-# from aiogram.fsm.context import FSMContext
-# from states.user_states import UserStates
 
 from config import settings
 from db.crud.user_crud import UserCrud
-from utils import get_notion_db_id
 from notion.notion_api import notion_client
-
 from openai_api.api import openai_client
+from utils import get_notion_db_id
+
+# from aiogram.fsm.context import FSMContext
+# from states.user_states import UserStates
+
 
 router = Router()
 
@@ -57,7 +58,7 @@ async def get_notion_db_link_and_tasks(message: Message):
 async def get_opneai_help(message: Message):
     """Сначала вытаскиваем thread_id из бд, если не находим то создаем новый и добовляем в бд.
     Далее вытаскиваем что имеется в базе данных Notion и форматируем под определнный формат.
-    Создаем новое сообщение OpenAI ассистенту с  наполнением Notion и с новой тасклй пользователя.
+    Создаем новое сообщение OpenAI ассистенту с наполнением Notion и с новой тасклй пользователя.
     Получаем ответ от ассистента и закидываем обратно в Notion"""
     if not await UserCrud.get_thread_id(user_id=message.from_user.id):
         thread = await openai_client.beta.threads.create()
@@ -78,7 +79,7 @@ async def get_opneai_help(message: Message):
     await openai_client.beta.threads.messages.create(
         thread_id=thread_id,
         role="user",
-        content=f"Existing tasks in the notion: {', '.join(map(str, list_of_existing_tasks))}. Here's a new task, transform it: {message.text}"
+        content=f"Existing tasks in the notion: {', '.join(map(str, list_of_existing_tasks))}. Here's a new task: {message.text}"
     )
     run = await openai_client.beta.threads.runs.create(
         thread_id=thread_id,
