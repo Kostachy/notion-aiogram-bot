@@ -15,7 +15,6 @@ async def create_assistant():
         instructions=prompt,
         model="gpt-3.5-turbo-1106",
     )
-    logging.info(assistant.id)
     return assistant.id
 
 

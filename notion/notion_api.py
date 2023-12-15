@@ -54,6 +54,7 @@ class NotionHelper:
             )
         except APIResponseError as err:
             logging.error(f"Notion API error - {err}")
+            raise APIResponseError
 
     async def get_db(self, database_id: str):
         db_rows = await self.client.databases.query(database_id=database_id)

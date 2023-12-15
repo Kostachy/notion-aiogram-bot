@@ -7,8 +7,9 @@ from aiogram.types import Message
 
 from config import settings
 from db.crud.user_crud import UserCrud
+from notion_client import APIResponseError
 from notion.notion_api import notion_client
-from openai_api.api import openai_client, update_assistant, create_assistant
+from openai_api.api import openai_client, update_assistant
 from utils import get_notion_db_id
 
 # from aiogram.fsm.context import FSMContext
@@ -39,7 +40,7 @@ async def get_notion_db_link_and_tasks(message: Message):
 @router.message(F.text == "OpenAi update")
 async def openai_update(message: Message):
     """Сервисная временная фича"""
-    await create_assistant()
+    await update_assistant()
     await message.answer("OK")
 
 
@@ -75,26 +76,6 @@ async def get_opneai_help(message: Message):
         assistant_id=settings.ASSISTANT_ID
     )
 
-    # tools_to_call = run.required_action.submit_tool_outputs.tool_calls
-    # logging.info(tools_to_call)
-    #
-    # tools_output_array = []
-    # for tool in tools_to_call:
-    #     tool_call_id = tool.id
-    #     function_name = tool.function.name
-    #
-    #     output = False
-    #     if function_name == "insert_task_and_time":
-    #         output = True
-    #
-    #     tools_output_array.append({"tool_call_id": tool_call_id, "output": output})
-    #
-    # run = await openai_client.beta.threads.runs.submit_tool_outputs(
-    #     thread_id=thread_id,
-    #     run_id=run.id,
-    #     tool_outputs=tools_output_array
-    # )
-
     while run.status not in ["completed", "failed", "requires_action"]:
         run = await openai_client.beta.threads.runs.retrieve(
             thread_id=thread_id,
@@ -106,29 +87,25 @@ async def get_opneai_help(message: Message):
     messages = await openai_client.beta.threads.messages.list(
         thread_id=thread_id
     )
-    logging.info("Messages!!!: %s", messages.data[0].content[0].text.value)
-
-    for thread_message in messages.data:
-        # Iterate over the 'content' attribute of the ThreadMessage, which is a list
-        for content_item in thread_message.content:
-            # Assuming content_item is a MessageContentText object with a 'text' attribute
-            # and that 'text' has a 'value' attribute, print it
-            logging.info("Content: %s", content_item.text.value)
 
     formatted_task = messages.data[0].content[0].text.value.replace('"', '').split('|')
     logging.info(formatted_task)
+
     category = formatted_task[0]
     title = formatted_task[1]
     priority = formatted_task[2]
     due_date = formatted_task[3]
-    logging.info("{} - {} - {} - {}".format(category, title, priority, due_date))
-    await notion_client.write_row_in_notion(database_id=notion_db_id,
-                                            category=category,
-                                            title=title,
-                                            priority=priority,
-                                            due_date=due_date)
 
-    await message.answer("✅Ваша задача успешно записана✅")
+    try:
+        await notion_client.write_row_in_notion(database_id=notion_db_id,
+                                                category=category,
+                                                title=title,
+                                                priority=priority,
+                                                due_date=due_date)
+
+        await message.answer("✅Ваша задача успешно записана✅")
+    except APIResponseError:
+        await message.answer("Упс, что-то пошло не так😰\nУбедитесь что ваша бд в Notion соответсвует формату")
 
 
 @router.message()
