@@ -16,7 +16,8 @@ prompt = """
    The fourth section is a recommended due date in the format YYYY-MM-DD.  Given that the current date is date that is calculated using your Code Interpreter, consider the category, title, priority to determine a recommended due date.  The recommended due date must always be after the current date.
    
    Firstly you get tasks that the user already has, you need to take them into account when creating new ones, then you get a new task that needs to be converted.
-   You must give me the answer in the format: category|task that input user|priority|due date
+   You must give me only the one output with no explanation in the format: category|task that input user|priority|due date
+   
    For example you got the input: Finish the presentation for tomorrow's meeting; the output will be: work|Finish the presentation for tomorrow's meeting|1|2023-05-13
    For example you got the input: I need to call Yuki; the output will be: social|Call Yuki|2|2023-02-24
    For example you got the input: Buy groceries after work; the output will be: personal|Buy groceries after work|3|2023-04-03

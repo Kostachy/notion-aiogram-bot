@@ -95,6 +95,7 @@ async def get_opneai_help(message: Message):
             # and that 'text' has a 'value' attribute, print it
             print(content_item.text.value, "!!!!!!!!!!!!!!!!!!!!!!")
 
+    logging.info('json: ',messages.json)
     formatted_task = messages.data[0].content[0].text.value.replace('"', '').split('|')
     logging.info("Formatted task!!!: %s", formatted_task)
 
