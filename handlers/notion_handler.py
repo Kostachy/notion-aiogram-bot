@@ -91,7 +91,11 @@ async def get_opneai_help(message: Message):
 
     for thread_message in messages.data:
         # Iterate over the 'content' attribute of the ThreadMessage, which is a list
-        print(thread_message)
+        logging.info(thread_message)
+        for content_item in thread_message.content:
+            # Assuming content_item is a MessageContentText object with a 'text' attribute
+            # and that 'text' has a 'value' attribute, print it
+            print(content_item.text.value)
 
     formatted_task = messages.data[0].content[0].text.value.replace('"', '').split('|')
     logging.info("Formatted task!: %s", formatted_task)
