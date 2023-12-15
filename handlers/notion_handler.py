@@ -106,16 +106,16 @@ async def get_opneai_help(message: Message):
     messages = await openai_client.beta.threads.messages.list(
         thread_id=thread_id
     )
-    logging.info("Messages: %s", messages.data[0].content[0].text.value)
+    logging.info("Messages!!!: %s", messages.data[0].content[0].text.value)
 
     for thread_message in messages.data:
         # Iterate over the 'content' attribute of the ThreadMessage, which is a list
         for content_item in thread_message.content:
             # Assuming content_item is a MessageContentText object with a 'text' attribute
             # and that 'text' has a 'value' attribute, print it
-            logging.info(content_item.text.value)
+            logging.info("Content: %s", content_item.text.value)
 
-    formatted_task = messages.data[0].content[0].text.value.replace('"', '')
+    formatted_task = messages.data[0].content[0].text.value.replace('"', '').split('|')
     category = formatted_task[0]
     title = formatted_task[1]
     priority = formatted_task[2]
