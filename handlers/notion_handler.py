@@ -87,7 +87,6 @@ async def get_opneai_help(message: Message):
 
     messages = await openai_client.beta.threads.messages.list(
         thread_id=thread_id,
-        after=created_message.id
     )
 
     for thread_message in messages.data:
