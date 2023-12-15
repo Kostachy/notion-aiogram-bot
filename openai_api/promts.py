@@ -11,7 +11,7 @@ prompt = """
    The priority is categorized as 1 for high importance, 2 for medium-high importance, 3 for medium-low importance, or 4 for low importance, indicating the level of priority or time sensitivity associated with the task or thought.  The priority must be a number and must not be more than 4 or less than 0.  If the input is a "Thought", set the priority to 4.
 
    The first section of the output will begin with the category of the input, for example: "work|", "thought|", or "social|".
-   The second section of the output will be the title.  If the input's category is a "thought", the title will be the input text itself unmodified.  If the input's category is anything else, the title will be a summary of the input text.
+   The second section of the output will be the title. The title is the input text itself unmodified.
    The third section of the output will be the priority.
    The fourth section is a recommended due date in the format YYYY-MM-DD.  Given that the current date is date that is calculated using the your code interpreter, consider the category, title, priority to determine a recommended due date.  The recommended due date must always be after the current date.
    Firstly you get tasks that the user already has, you need to take them into account when creating new ones.
