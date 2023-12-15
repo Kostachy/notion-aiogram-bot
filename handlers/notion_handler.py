@@ -116,10 +116,12 @@ async def get_opneai_help(message: Message):
             logging.info("Content: %s", content_item.text.value)
 
     formatted_task = messages.data[0].content[0].text.value.replace('"', '').split('|')
+    logging.info(formatted_task)
     category = formatted_task[0]
     title = formatted_task[1]
     priority = formatted_task[2]
     due_date = formatted_task[3]
+    logging.info("{} - {} - {} - {}".format(category, title, priority, due_date))
     await notion_client.write_row_in_notion(database_id=notion_db_id,
                                             category=category,
                                             title=title,
