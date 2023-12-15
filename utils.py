@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 from urllib.parse import urlparse
 
 
@@ -29,3 +30,14 @@ def write_dict_to_file_as_json(content, file_name):
 
     with open(file_name, 'w') as f:
         f.write(content_as_json_str)
+
+
+def get_current_date_formatted():
+    date = datetime.now()
+    formatted_date = date.strftime("%Y-%m-%d")
+    return formatted_date
+
+
+def get_current_day_of_week():
+    days_of_week = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+    return days_of_week[datetime.now().weekday()]

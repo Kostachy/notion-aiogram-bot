@@ -8,7 +8,7 @@ from aiogram.types import Message
 from config import settings
 from db.crud.user_crud import UserCrud
 from notion.notion_api import notion_client
-from openai_api.api import openai_client
+from openai_api.api import openai_client, update_assistant
 from utils import get_notion_db_id
 
 # from aiogram.fsm.context import FSMContext
@@ -33,25 +33,14 @@ async def get_notion_db_link_and_tasks(message: Message):
     """Добавляем ссылку на notion в бд"""
     db_id = get_notion_db_id(message.text)
     await UserCrud.update_db_link(user_id=message.from_user.id, db_link=db_id)
-    # await message.answer("""Теперь опишите каждый проект:\nКогда дедлайн(Дата формата YYYY-MM-DD)?\n
-    # Какая приоритетность у проекта?(Приоритетность становится выбирается цифрами от 1 до 4 включительно,
-    # то есть 1 самая приоритетная, а 4 наименее приоритетная)\nФормат: (категория,задача,приоритетность,дата)""")
     await message.answer("Теперь напишите вашу задачу")
 
 
-# @router.message(F.text.regexp(r'.*\b([1-4],\d{4}-\d{2}-\d{2})\b.*'))
-# async def get_discription_about_tasks(message: Message, state: FSMContext):
-#     """Получаем информацию об дедлайнах и приоритетах формат принимаемых данных:
-#     (категория,задача,приоритетность,дата)"""
-#     data_about_tasks = message.text.split(",")
-#     await state.set_state(UserStates.input_data)
-#     await state.update_data(category=data_about_tasks[0],
-#                             title=data_about_tasks[1],
-#                             priority=data_about_tasks[2],
-#                             due_date=data_about_tasks[3])
-#     # write_dict_to_file_as_json(
-#     #     content={"category": category, "title": title, "priority": priority, "due_date": due_date},
-#     #     file_name="user_data.json")
+@router.message(F.text == "OpenAi update")
+async def openai_update(message: Message):
+    """Сервисная временная фича"""
+    await update_assistant()
+    await message.answer("OK")
 
 
 @router.message(F.text)
@@ -118,6 +107,13 @@ async def get_opneai_help(message: Message):
         thread_id=thread_id
     )
     logging.info("Messages: %s", messages.data[0].content[0].text.value)
+
+    for thread_message in messages.data:
+        # Iterate over the 'content' attribute of the ThreadMessage, which is a list
+        for content_item in thread_message.content:
+            # Assuming content_item is a MessageContentText object with a 'text' attribute
+            # and that 'text' has a 'value' attribute, print it
+            logging.info(content_item.text.value)
 
     formatted_task = messages.data[0].content[0].text.value.split('|')
     category = formatted_task[0]
