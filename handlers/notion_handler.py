@@ -66,7 +66,7 @@ async def get_opneai_help(message: Message):
     for row in notion_db:
         list_of_existing_tasks.append(f"{row['Category']}|{row['Title']}|{row['Priority']}|{row['Due date']}")
 
-    await openai_client.beta.threads.messages.create(
+    created_message = await openai_client.beta.threads.messages.create(
         thread_id=thread_id,
         role="user",
         content=f"Existing tasks in the notion: {', '.join(map(str, list_of_existing_tasks))}. Here's a new task: {message.text}"
@@ -85,14 +85,16 @@ async def get_opneai_help(message: Message):
         logging.info("Run status: %s", run.status)
 
     messages = await openai_client.beta.threads.messages.list(
-        thread_id=thread_id
+        thread_id=thread_id,
+        after=created_message.id
     )
 
-    final_message = await openai_client.beta.threads.runs.retrieve(thread_id=thread_id,
-                                                                   run_id=run.id
-                                                                   )
-
-    logging.info("Final message!!!!!!!!!!: %s", final_message)
+    for thread_message in messages.data:
+        # Iterate over the 'content' attribute of the ThreadMessage, which is a list
+        for content_item in thread_message.content:
+            # Assuming content_item is a MessageContentText object with a 'text' attribute
+            # and that 'text' has a 'value' attribute, print it
+            print(content_item.text.value)
 
     formatted_task = messages.data[0].content[0].text.value.replace('"', '').split('|')
     logging.info("Formatted task: %s", formatted_task)
