@@ -82,7 +82,8 @@ async def get_opneai_help(message: Message):
             run_id=run.id
         )
         await asyncio.sleep(5)
-        logging.info("Run status: %s", run.status)
+        logging.info("Run status: %s", run.status   )
+        await openai_client.beta.threads.runs.retrieve()
 
     messages = await openai_client.beta.threads.messages.list(
         thread_id=thread_id,
@@ -94,10 +95,10 @@ async def get_opneai_help(message: Message):
         for content_item in thread_message.content:
             # Assuming content_item is a MessageContentText object with a 'text' attribute
             # and that 'text' has a 'value' attribute, print it
-            print(content_item.text.value)
+            print(content_item.text.value, "!!!!!!!!!!!!!!!!!!!!!!")
 
     formatted_task = messages.data[0].content[0].text.value.replace('"', '').split('|')
-    logging.info("Formatted task: %s", formatted_task)
+    logging.info("Formatted task!!!: %s", formatted_task)
 
     category = formatted_task[0]
     title = formatted_task[1]
