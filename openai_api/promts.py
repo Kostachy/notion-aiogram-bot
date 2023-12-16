@@ -13,7 +13,7 @@ prompt = """
    The first section of the output will begin with the category of the input, for example: "work|", "thought|", or "social|".
    The second section of the output will be the title. The title is the input task itself unmodified.
    The third section of the output will be the priority.
-   The fourth section is a recommended due date in the format YYYY-MM-DD.  Given that the current date is date that is calculated using your Code Interpreter, consider the category, title, priority to determine a recommended due date.  The recommended due date must always be after the current date.
+   The fourth section is a recommended due date in the format YYYY-MM-DD.  The date has to be calculated by executing python script in your Code Interpreter, consider the category, title, priority to determine a recommended due date.  The recommended due date must always be after the current date.
    
    Firstly you get tasks that the user already has, you need to take them into account when creating new ones, then you get a new task that needs to be converted.
    You must give me only the one output with no explanation in the format: category|task that input user|priority|due date
