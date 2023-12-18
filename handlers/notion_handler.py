@@ -1,7 +1,9 @@
 import asyncio
 import logging
+from pathlib import Path
+import os
 
-from aiogram import F, Router
+from aiogram import Bot, F, Router
 from aiogram.filters import CommandStart
 from aiogram.types import Message
 
@@ -11,6 +13,7 @@ from notion_client import APIResponseError
 from notion.notion_api import notion_client
 from openai_api.api import openai_client, update_assistant
 from utils import get_notion_db_id
+from assemblyai_api.api import assemblyai_helper
 
 # from aiogram.fsm.context import FSMContext
 # from states.user_states import UserStates
@@ -44,12 +47,19 @@ async def openai_update(message: Message):
     await message.answer("OK")
 
 
-@router.message(F.text)
-async def get_opneai_help(message: Message):
+@router.message(F.voice)
+async def get_opneai_help(message: Message, bot: Bot):
     """Сначала вытаскиваем thread_id из бд, если не находим то создаем новый и добовляем в бд.
     Далее вытаскиваем что имеется в базе данных Notion и форматируем под определнный формат.
     Создаем новое сообщение OpenAI ассистенту с наполнением Notion и с новой тасклй пользователя.
     Получаем ответ от ассистента и закидываем обратно в Notion"""
+    voice = await bot.get_file(file_id=message.voice.file_id)
+    file_path = f"./tmp/voice/{voice.file_id}.mp3"
+    await bot.download_file(voice.file_path, destination=file_path)
+    audio_text = assemblyai_helper.get_text_from_voice(audio_url=file_path)
+    await message.answer(f"Ваша задача: {audio_text}")
+    os.remove(file_path)
+
     if not await UserCrud.get_thread_id(user_id=message.from_user.id):
         thread = await openai_client.beta.threads.create()
         thread_id = thread.id
@@ -69,7 +79,7 @@ async def get_opneai_help(message: Message):
     await openai_client.beta.threads.messages.create(
         thread_id=thread_id,
         role="user",
-        content=f"Existing tasks in the notion: {', '.join(map(str, list_of_existing_tasks))}. Here's a new task: {message.text}"
+        content=f"Existing tasks in the notion: {', '.join(map(str, list_of_existing_tasks))}. Here's a new task: {audio_text}"
     )
     run = await openai_client.beta.threads.runs.create(
         thread_id=thread_id,

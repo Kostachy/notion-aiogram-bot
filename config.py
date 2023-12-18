@@ -11,6 +11,8 @@ class Settings(BaseSettings):
     OPENAI_TOKEN: str
     ASSISTANT_ID: str
 
+    ASSEMBLYAI_TOKEN: str
+
     DB_PORT: str
     DB_HOST: str
     DB_USER: str
