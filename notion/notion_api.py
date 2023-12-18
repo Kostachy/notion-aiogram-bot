@@ -1,7 +1,6 @@
 import logging
 
 from notion_client import APIResponseError, AsyncClient
-
 from config import settings
 from utils import safe_get
 
@@ -10,36 +9,23 @@ class NotionHelper:
     def __init__(self):
         self.client = AsyncClient(auth=settings.NOTION_TOKEN)
 
-    async def write_row_in_notion(self, database_id: str, title: str, category: str, priority: str, due_date: str):
+    async def write_row_in_notion(self, database_id: str, task_name: str, start_date: str, end_date: str):
         properties = {
-            "Title": {
+            "Task name": {
                 "id": "title",
                 "type": "title",
                 "title": [{
                     "text": {
-                        "content": title
+                        "content": task_name
                     }
                 }]
             },
-            "Category": {
-                "id": "category",
-                "type": "select",
-                "select": {
-                    "name": category
-                }
-            },
-            "Priority": {
-                "id": "priority",
-                "type": "select",
-                "select": {
-                    "name": priority
-                }
-            },
-            "Due Date": {
-                "id": "Due Date",
+            "Date": {
+                "id": "Date",
                 "type": "date",
                 "date": {
-                    "start": due_date,
+                    "start": start_date,
+                    "end": end_date,
                 }
             }
         }
@@ -65,16 +51,14 @@ class NotionHelper:
 
         simple_rows = []
         for row in db_rows['results']:
-            title = safe_get(row, 'properties.Title.title.0.text.content')
-            category = safe_get(row, 'properties.Category.select.name')
-            due_date = safe_get(row, 'properties.Due Date.date.start')
-            priority = safe_get(row, 'properties.Priority.select.name')
+            task_name = safe_get(row, 'properties.Task name.title.0.text.content')
+            start_date = safe_get(row, 'properties.Date.date.start')
+            end_date = safe_get(row, 'properties.Date.date.end')
 
             simple_rows.append({
-                'Title': title,
-                'Category': category,
-                'Priority': priority,
-                'Due date': due_date
+                'task_name': task_name,
+                'start_date': start_date,
+                'end_date': end_date
             })
         return simple_rows
 
@@ -83,19 +67,19 @@ notion_client = NotionHelper()
 
 # async def main():
 #     notion_client = NotionHelper()
-#     # notion_db = await notion_client.read_db("ca3b142971f4434cbedc5a78c7e129d7")
+#     notion_db = await notion_client.read_db("29884a3519a44d979f97ae1c994cd3aa")
 #     # result_list = []
 #     # for row in notion_db:
 #     #     result_list.append(f"{row['Category']}|{row['Title']}|{row['Priority']}|{row['Due date']}")
 #     # print(f"exist tasks: {', '.join(map(str, result_list))}")
 #
-#     await notion_client.write_row_in_notion(database_id="ca3b142971f4434cbedc5a78c7e129d7",
-#                                             title="Make some food for dinner",
-#                                             category="Food",
-#                                             priority="3",
-#                                             due_date="2023-12-18")
+#     # await notion_client.write_row_in_notion(database_id="ca3b142971f4434cbedc5a78c7e129d7",
+#     #                                         title="Make some food for dinner",
+#     #                                         category="Food",
+#     #                                         priority="3",
+#     #                                         due_date="2023-12-18")
 #
 #
 # if __name__ == "__main__":
 #     asyncio.run(main())
-# # ca3b142971f4434cbedc5a78c7e129d7                   work|Finish presentation|1|2023-05-13
+# # # ca3b142971f4434cbedc5a78c7e129d7                   work|Finish presentation|1|2023-05-13

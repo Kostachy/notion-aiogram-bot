@@ -1,6 +1,5 @@
 import asyncio
 import logging
-from pathlib import Path
 import os
 
 from aiogram import Bot, F, Router
@@ -74,7 +73,7 @@ async def get_opneai_help(message: Message, bot: Bot):
 
     list_of_existing_tasks = []
     for row in notion_db:
-        list_of_existing_tasks.append(f"{row['Category']}|{row['Title']}|{row['Priority']}|{row['Due date']}")
+        list_of_existing_tasks.append(f"{row['task_name']}|{row['start_date']}|{row['end_date']}")
 
     await openai_client.beta.threads.messages.create(
         thread_id=thread_id,
@@ -102,17 +101,15 @@ async def get_opneai_help(message: Message, bot: Bot):
     formatted_task = messages.data[0].content[0].text.value.replace('"', '').split('|')
     logging.info("Formatted task!: %s", formatted_task)
 
-    category = formatted_task[0]
-    title = formatted_task[1]
-    priority = formatted_task[2]
-    due_date = formatted_task[3]
+    task_name = formatted_task[0]
+    start_date = formatted_task[1]
+    end_date = formatted_task[2]
 
     try:
         await notion_client.write_row_in_notion(database_id=notion_db_id,
-                                                category=category,
-                                                title=title,
-                                                priority=priority,
-                                                due_date=due_date)
+                                                task_name=task_name,
+                                                start_date=start_date,
+                                                end_date=end_date)
 
         await message.answer("✅Ваша задача успешно записана✅")
     except APIResponseError:
